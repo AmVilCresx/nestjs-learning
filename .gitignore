@@ -41,6 +41,7 @@ lerna-debug.log*
 .env
 .env.development.local
 .env.test.local
+.env.production
 .env.production.local
 .env.local
 
@@ -93,7 +94,7 @@ yarn-error.log
 /packages/**/.npmignore
 /packages/**/LICENSE
 *.tsbuildinfo
-
+/config/*.local.*
 # example
 /quick-start
 /example_dist
