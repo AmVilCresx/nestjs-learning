@@ -1,45 +1,19 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import {
+  WINSTON_MODULE_NEST_PROVIDER
+} from 'nest-winston';
 import { AppModule } from './app.module';
-import * as winston from 'winston';
-import { WinstonModule, utilities } from 'nest-winston';
-import DailyRotateFile from 'winston-daily-rotate-file';
 
 declare const module: any;
 
 async function bootstrap() {
-  const instance = winston.createLogger({
-    transports: [
-      new winston.transports.Console({
-        level: 'debug',
-        format: winston.format.combine(
-          winston.format.timestamp(),
-          utilities.format.nestLike(),
-        ),
-      }),
-
-      new DailyRotateFile({
-        level: 'info',
-        dirname: 'logs',
-        filename: 'nest-learning-%DATE%.log',
-        datePattern: 'YYYY-MM-DD-HH',
-        zippedArchive: true,
-        maxSize: '200M',
-        maxFiles: '14d',
-        format: winston.format.combine(
-          winston.format.timestamp(),
-          utilities.format.nestLike(),
-        ),
-      })
-    ],
-  });
-
-  const app = await NestFactory.create(AppModule, {
-    logger: WinstonModule.createLogger({
-      instance,
-    })
-  });
+  const app = await NestFactory.create(AppModule, {});
+  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   const runPort = process.env.PORT ?? 3000;
+  const httpAdpter = app.get(HttpAdapterHost);
   app.setGlobalPrefix('/api');
+  // 全局只能有一个 Filter
+  // app.useGlobalFilters(new AllExceptionFilter(logger, httpAdpter));
   await app.listen(runPort);
   console.log('程序已启动，端口：', runPort);
   if (module.hot) {

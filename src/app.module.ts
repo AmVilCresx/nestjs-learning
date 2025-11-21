@@ -1,11 +1,11 @@
-import { Global, Module } from '@nestjs/common';
+import { Global, Logger, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './configuration';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigEnum } from './common/enum/config.enum';
-import { Logger } from 'winston';
+import { LogsModule } from './log/log.module';
 
 // const envFilePath = `.env.${process.env.NODE_ENV || `development`}`
 
@@ -36,9 +36,10 @@ import { Logger } from 'winston';
         database: configService.get(ConfigEnum.DB_DATABASE)
       } as TypeOrmModuleOptions) 
     }),
+    LogsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, Logger],
+  providers: [AppService, Logger, ConfigService],
   exports: [Logger]
 })
 export class AppModule {}

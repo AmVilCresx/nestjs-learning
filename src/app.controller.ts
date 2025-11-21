@@ -1,20 +1,19 @@
-import { Controller, Get, LoggerService } from '@nestjs/common';
-import { AppService } from './app.service';
+import * as common from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ConfigEnum } from './common/enum/config.enum';
-import { Logger } from 'winston';
-
+import { AppService } from './app.service';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { Controller, Get, Inject, LoggerService } from '@nestjs/common';
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly configService: ConfigService,
-    private readonly logger: Logger,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER) private readonly logger: common.LoggerService,
   ) {}
 
   @Get()
   getHello(): string {
-    this.logger.log('current_cfg===>', this.configService.get('db'))
+    this.logger.log('info', `Database config: ${JSON.stringify(this.configService.get('db'))}`);
     return this.appService.getHello();
   }
 }

@@ -5,4 +5,10 @@ export enum ConfigEnum {
     DB_USER_NAME = 'db.username',
     DB_PASSWORD = 'db.password',
     DB_DATABASE = 'db.database',
+
+}
+
+export enum LogEnum {
+    LOG_ON = 'log.on',
+    LOG_LEVEL = 'log.level',
 }

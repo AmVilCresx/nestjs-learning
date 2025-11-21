@@ -1,2 +1,6 @@
 db:
   type: mysql
+
+log:
+  on: true
+  level: info
