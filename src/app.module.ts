@@ -1,13 +1,12 @@
 import { Global, Logger, Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './configuration';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { ConfigEnum } from './common/enum/config.enum';
+import { DbconfigModule } from './dbconfig/dbconfig.module';
 import { LogsModule } from './log/log.module';
-
-// const envFilePath = `.env.${process.env.NODE_ENV || `development`}`
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 
 @Global()
 @Module({
@@ -17,29 +16,13 @@ import { LogsModule } from './log/log.module';
       // envFilePath,
       load: [configuration],
     }),
-    // TypeOrmModule.forRoot({
-    //   type: 'mysql',
-    //   host: '127.0.0.1',
-    //   port: 3306,
-    //   password: 'xxxx',
-    //   database: 'testdb',
-    // }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: configService.get(ConfigEnum.DB_TYPE),
-        host: configService.get(ConfigEnum.DB_HOST),
-        port: configService.get(ConfigEnum.DB_PORT),
-        username: configService.get(ConfigEnum.DB_USER_NAME),
-        password: configService.get(ConfigEnum.DB_PASSWORD),
-        database: configService.get(ConfigEnum.DB_DATABASE)
-      } as TypeOrmModuleOptions) 
-    }),
     LogsModule,
+    DbconfigModule,
+    AuthModule,
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService, Logger, ConfigService],
-  exports: [Logger]
+  exports: [Logger],
 })
 export class AppModule {}
