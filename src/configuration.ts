@@ -9,14 +9,14 @@ import * as Joi from 'joi';
 const YAML_COMMON_CONFIG_FILENAME = 'config.yaml';
 const fileCommonPath = join(
   __dirname,
-  '../config',
+  'common/config',
   YAML_COMMON_CONFIG_FILENAME,
 );
 const commonConfig = yaml.load(readFileSync(fileCommonPath, 'utf-8'));
 
 const envFilePath = join(
   __dirname,
-  '../config',
+  'common/config',
   `config.${process.env.NODE_ENV || `development`}.yaml`,
 );
 const envConfig = yaml.load(readFileSync(envFilePath, 'utf-8'));
