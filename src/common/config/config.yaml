@@ -1,6 +1,6 @@
 db:
   type: mysql
-
+  port: 3306
 log:
   on: true
   level: info
