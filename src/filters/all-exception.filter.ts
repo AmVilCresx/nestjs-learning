@@ -16,14 +16,14 @@ export class AllExceptionFilter implements common.ExceptionFilter {
       exception instanceof common.HttpException
         ? exception.getStatus()
         : common.HttpStatus.INTERNAL_SERVER_ERROR;
-
+    const msg: unknown = exception['response'] || 'Internal Server Error';
     const respBody = {
       headers: request.headers,
       code: status,
       timestamp: new Date().toISOString(),
       path: request.url,
       method: request.method,
-      message: exception.message || exception.name || '服务繁忙',
+      message: msg,
     };
     
     this.logger.error('发生异常', respBody)

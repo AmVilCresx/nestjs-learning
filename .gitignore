@@ -112,3 +112,4 @@ build/config\.gypi
 .npmrc
 pnpm-lock.yaml
 /.history
+src/common/config/config.local.yaml
