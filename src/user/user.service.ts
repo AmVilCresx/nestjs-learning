@@ -14,12 +14,12 @@ export class UserService {
 
   async findAll() {
     const res = await this.userRepo.find();
-    return res;
+    return plainToInstance(User, res);
   }
 
-  async findByUserName(username: string): Promise<User> {
+  async findByUserName(username: string): Promise<User | null> {
     const user = await this.userRepo.findOne({ where: { username } });
-    return user as User;
+    return user;
   }
 
   async createUser(dto: CreateUserDto): Promise<User> {
