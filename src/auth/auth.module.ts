@@ -17,7 +17,6 @@ import { RsaService } from './rsa.service';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
-        console.log(configService.get<string>(ConfigEnum.JWT_SECRET));
         return {
           secret: configService.get<string>(ConfigEnum.JWT_SECRET),
           signOptions: {

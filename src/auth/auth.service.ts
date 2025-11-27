@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt'; // 引入 bcrypt
 import { plainToInstance } from 'class-transformer';
@@ -6,7 +10,6 @@ import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
 import { UserSignUpDto } from './dto/user-signup.dto';
 import { RsaService } from './rsa.service';
-import { bool, boolean } from 'joi';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +23,7 @@ export class AuthService {
     const user = await this.userService.findByUserName(username);
     // 校验用户名密码
     if (!user) {
-        throw new UnauthorizedException('用户名或密码错误');
+      throw new UnauthorizedException('用户名或密码错误');
     }
     // 密码是RSA加密的，得先解密
     const passwordRaw = this.rsaService.decrypt(password);
@@ -36,17 +39,21 @@ export class AuthService {
   }
 
   async signUp(dto: UserSignUpDto) {
-    const { password } = dto;
+    const { password, username } = dto;
+    const existsUser = await this.userService.findByUserName(username);
+    if (existsUser) {
+      throw new ForbiddenException('用户名已存在');
+    }
     // 先得到明文
     const passwordRaw = this.rsaService.decrypt(password);
     // 再加密存储
-    const hashedPassword =  bcrypt.hashSync(passwordRaw, 8)
-    dto.password = hashedPassword
+    const hashedPassword = bcrypt.hashSync(passwordRaw, 8);
+    dto.password = hashedPassword;
     const createUserDto = plainToInstance(CreateUserDto, dto);
     return await this.userService.createUser(createUserDto);
   }
 
   getPublicKey() {
-    return this.rsaService.getPublicKey()
+    return this.rsaService.getPublicKey();
   }
 }
