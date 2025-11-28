@@ -1,12 +1,14 @@
 import { Global, Logger, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { JwtAuthGuard } from './common/guards/jwt.guard';
+import { PriorityGuardExecutor } from './common/guards/priority.guard-executor';
+import { RolesGuard } from './common/guards/role.guard';
 import configuration from './configuration';
 import { DbconfigModule } from './dbconfig/dbconfig.module';
-import { JwtAuthGuard } from './guards/jwt.guard';
 import { LogsModule } from './log/log.module';
 import { UserModule } from './user/user.module';
 
@@ -27,11 +29,16 @@ import { UserModule } from './user/user.module';
   providers: [
     AppService,
     Logger,
+    JwtAuthGuard,
+    RolesGuard,
     // ConfigService,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: JwtAuthGuard, // 这种注册方式，可以访问DI容器
-    // },
+    {
+      provide: APP_GUARD,
+      useFactory: (jwtAuthGuard: JwtAuthGuard, roleGruard: RolesGuard) => {
+        return new PriorityGuardExecutor([jwtAuthGuard, roleGruard]);
+      },
+      inject: [JwtAuthGuard, RolesGuard],
+    },
   ],
   exports: [Logger],
 })
