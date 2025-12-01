@@ -11,6 +11,7 @@ import configuration from './configuration';
 import { DbconfigModule } from './dbconfig/dbconfig.module';
 import { LogsModule } from './log/log.module';
 import { UserModule } from './user/user.module';
+import { RoleModule } from './role/role.module';
 
 @Global()
 @Module({
@@ -24,6 +25,7 @@ import { UserModule } from './user/user.module';
     DbconfigModule,
     AuthModule,
     UserModule,
+    RoleModule,
   ],
   controllers: [AppController],
   providers: [
@@ -31,7 +33,6 @@ import { UserModule } from './user/user.module';
     Logger,
     JwtAuthGuard,
     RolesGuard,
-    // ConfigService,
     {
       provide: APP_GUARD,
       useFactory: (jwtAuthGuard: JwtAuthGuard, roleGruard: RolesGuard) => {

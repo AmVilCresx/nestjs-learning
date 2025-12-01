@@ -8,6 +8,7 @@ export class AllExceptionFilter implements common.ExceptionFilter {
     private readonly httpAdapterHost: HttpAdapterHost,
   ) {}
   catch(exception: any, host: common.ArgumentsHost) {
+    this.logger.error('发生异常', exception)
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
