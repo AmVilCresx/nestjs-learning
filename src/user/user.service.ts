@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToInstance } from 'class-transformer';
 import { pinyin } from 'pinyin-pro';
+import { REGEX } from '../common/regex.constants';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
-import { plainToInstance } from 'class-transformer';
+import { RoleService } from '../role/role.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepo: Repository<User>,
+    private readonly roleSercvice: RoleService,
   ) {}
 
   async findAll() {
@@ -23,15 +26,25 @@ export class UserService {
   }
 
   async createUser(dto: CreateUserDto): Promise<User> {
-    const firstLetter = getFirstInitial(dto.username);
+    const candidateName = dto.nickname || dto.username;
+    const firstLetter = getFirstInitial(candidateName);
     const userTemp = { ...dto, firstLetter } as User;
+    userTemp.createDate = new Date();
+    userTemp.updateDate = new Date();
     const saveUser = await this.userRepo.save(userTemp);
     return plainToInstance(User, saveUser); // 触发 @Exclude()
   }
 }
 
 function getFirstInitial(text: string): string {
-  if (!text?.trim()) return '#';
+  if (!text?.trim()) {
+    return '#';
+  }
+
+  const match = REGEX.USER_NAME_START.test(text.trim());
+  if (!match) {
+    return '#';
+  }
 
   const firstChar = text.trim()[0];
 

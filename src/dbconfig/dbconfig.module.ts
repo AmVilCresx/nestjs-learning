@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { ConfigEnum } from 'src/common/enum/config.enum';
+import { ConfigEnum } from '../common/enum/config.enum';
 
 @Module({
   imports: [
@@ -15,6 +15,9 @@ import { ConfigEnum } from 'src/common/enum/config.enum';
           username: configService.get(ConfigEnum.DB_USER_NAME),
           password: configService.get(ConfigEnum.DB_PASSWORD),
           database: configService.get(ConfigEnum.DB_DATABASE),
+          connectTimeout: 60000, // 连接超时
+          timeout: 60000, // 查询超时（可选）
+          connectorPackage: 'mysql2', 
           // entities: [baseDir + '/**/*.entity.{ts,js}'],
           entities: [__dirname + '/../**/*.entity.{ts,js}'],
         } as TypeOrmModuleOptions;

@@ -10,6 +10,8 @@ import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
 import { UserSignUpDto } from './dto/user-signup.dto';
 import { RsaService } from './rsa.service';
+import { RoleService } from '../role/role.service';
+import { UserRoleService } from '../user/user-role.service';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +19,8 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwt: JwtService,
     private readonly rsaService: RsaService,
+    private readonly roleService: RoleService,
+    private readonly userRoleSrvice: UserRoleService,
   ) {}
 
   async signIn(username: string, password: string) {
@@ -31,10 +35,13 @@ export class AuthService {
     if (!isMatch) {
       throw new UnauthorizedException('用户名或密码错误');
     }
+    const userRoles = this.userRoleSrvice.findRolesByUserId(user.id);
+    const roleCodes = (await userRoles).map((role) => role.roleCode);
     // 生成token
     return await this.jwt.signAsync({
       username,
       sub: user.id,
+      roles: roleCodes || ['user'],
     });
   }
 
@@ -50,7 +57,12 @@ export class AuthService {
     const hashedPassword = bcrypt.hashSync(passwordRaw, 8);
     dto.password = hashedPassword;
     const createUserDto = plainToInstance(CreateUserDto, dto);
-    return await this.userService.createUser(createUserDto);
+    const user = await this.userService.createUser(createUserDto)
+    // 查询默认角色
+    const defaultRoles = await this.roleService.findDefaultRoles();
+    await this.userRoleSrvice.assignRoleToUser(user.id, defaultRoles.map(role => role.code));
+
+    return user;
   }
 
   getPublicKey() {

@@ -8,11 +8,13 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { RsaService } from './rsa.service';
+import { RoleModule } from '../role/role.module';
 
 @Module({
   imports: [
     UserModule,
     PassportModule,
+    RoleModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
