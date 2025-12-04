@@ -15,7 +15,7 @@ export class MenuService {
 
   }
 
-  async create(createMenuDto: CreateMenuDto) {
+  async create(createMenuDto: CreateMenuDto, curUser: any) {
     const tempMenu = plainToInstance(Menu, createMenuDto);
      const pId = tempMenu.parentId;
     if (!pId) {
@@ -26,11 +26,13 @@ export class MenuService {
       if (!parentMenu) {
         throw new Error('参数非法，父级菜单不存在')
       }
-      tempMenu.parentId = parentMenu.parentIds + ',' + parentMenu.parentId
+      tempMenu.parentIds = parentMenu.parentIds + ',' + pId
     }
+    tempMenu.createBy = curUser.userId;
+    tempMenu.updateBy = curUser.userId;
     tempMenu.createDate = new Date();
     tempMenu.updateDate = new Date();
-    return this.menuRepository.save(tempMenu);
+    return plainToInstance(Menu, this.menuRepository.save(tempMenu));
   }
 
   findAll() {

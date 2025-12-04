@@ -25,14 +25,18 @@ export class Menu {
     parentIds?: string;
 
     @Column({ name: 'create_date', type: 'datetime'})
+    @Exclude()
     createDate: Date;
 
     @Column({name: 'update_date', type: 'datetime'})
+    @Exclude()
     updateDate: Date;
 
     @Column({name: 'create_by'})
+    @Exclude()
     createBy: string;
 
     @Column({name: 'update_by'})
+    @Exclude()
     updateBy: string;
 }
