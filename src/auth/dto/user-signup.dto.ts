@@ -4,7 +4,7 @@ export class UserSignUpDto {
     
     @IsString({message: '用户名必须是字符串类型'})
     @IsNotEmpty({message: '用户名不能为空'})
-    @Length(5, 20, {message: `用户名长度必须在$constraint1到$constraint2个字符之间`})
+    @Length(4, 20, {message: `用户名长度必须在$constraint1到$constraint2个字符之间`})
     username: string;
 
     @IsOptional()

@@ -1,18 +1,17 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigEnum } from 'src/common/enum/config.enum';
-import { UserModule } from 'src/user/user.module';
+import { RoleModule } from '../role/role.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { RsaService } from './rsa.service';
-import { RoleModule } from '../role/role.module';
 
+@Global()
 @Module({
   imports: [
-    UserModule,
     PassportModule,
     RoleModule,
     JwtModule.registerAsync({

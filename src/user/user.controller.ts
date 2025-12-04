@@ -1,4 +1,6 @@
-import { Controller, Get, Req } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { Roles } from 'src/role/decorator/roles.decorator';
+import { User } from './decorator/user.decorator';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -6,8 +8,9 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('/all')
-  getAll(@Req() req) {
-    console.log('请求用户信息：', req.user);
+  @Roles('admin')
+  getAll(@User() user) {
+    console.log('请求用户信息：', user);
     return this.userService.findAll();
   }
 }

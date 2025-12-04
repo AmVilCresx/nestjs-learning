@@ -12,6 +12,7 @@ import { DbconfigModule } from './dbconfig/dbconfig.module';
 import { LogsModule } from './log/log.module';
 import { UserModule } from './user/user.module';
 import { RoleModule } from './role/role.module';
+import { MenuModule } from './menu/menu.module';
 
 @Global()
 @Module({
@@ -26,6 +27,7 @@ import { RoleModule } from './role/role.module';
     AuthModule,
     UserModule,
     RoleModule,
+    MenuModule,
   ],
   controllers: [AppController],
   providers: [
