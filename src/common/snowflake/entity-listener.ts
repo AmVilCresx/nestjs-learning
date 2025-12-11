@@ -1,6 +1,5 @@
-import { EventSubscriber, EntitySubscriberInterface, InsertEvent } from 'typeorm';
+import { EntitySubscriberInterface, EventSubscriber, InsertEvent } from 'typeorm';
 import { SnowflakeService } from './snowflake.service';
-import { Injectable } from '@nestjs/common';
 
 @EventSubscriber()
 export class SnowflakeSubscriber implements EntitySubscriberInterface<any> {

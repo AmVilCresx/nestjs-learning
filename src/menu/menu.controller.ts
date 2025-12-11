@@ -13,23 +13,23 @@ export class MenuController {
     return await this.menuService.create(createMenuDto, curUser);
   }
 
-  @Get()
-  findAll() {
-    return this.menuService.findAll();
+  @Get('tree')
+  getMenuTree() {
+    return this.menuService.findTree();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.menuService.findOne(+id);
+  @Get('get/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.menuService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMenuDto: UpdateMenuDto) {
-    return this.menuService.update(+id, updateMenuDto);
+  @Patch('update/:id')
+  async update(@Param('id') id: string, @Body() updateMenuDto: UpdateMenuDto) {
+    return await this.menuService.update(id, updateMenuDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.menuService.remove(+id);
+  @Delete('delete/:id')
+ async remove(@Param('id') id: string) {
+    return await this.menuService.remove(id);
   }
 }

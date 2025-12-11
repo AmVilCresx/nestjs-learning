@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { RoleAddDto } from './dto/role-add.dto';
-import { Role } from './role.entity';
+import { Role } from './entities/role.entity';
 
 @Injectable()
 export class RoleService {

@@ -5,7 +5,7 @@ import { pinyin } from 'pinyin-pro';
 import { REGEX } from '../common/regex.constants';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 import { RoleService } from '../role/role.service';
 
 @Injectable()
